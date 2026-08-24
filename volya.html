@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Воля</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night: #12141c;
+    --night-2: #1b1e29;
+    --night-3: #22263380;
+    --wheat: #d8a63e;
+    --wheat-soft: #e8c878;
+    --steppe: #6b7a52;
+    --ember: #b23a2c;
+    --iron: #9a9ca3;
+    --iron-dim: #6c6e75;
+    --paper: #ede8dc;
+    --text-main: #ede8dc;
+    --text-dim: #a7a9b3;
+    --line: #33374544;
+    --disp-display: "Fraunces", serif;
+    --disp-body: "Manrope", sans-serif;
+    --disp-mono: "JetBrains Mono", monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--night);
+    color: var(--text-main);
+    font-family: var(--disp-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  ::selection{ background: var(--wheat); color: var(--night); }
+
+  a{ color: inherit; }
+
+  .eyebrow{
+    font-family: var(--disp-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--wheat);
+    display: inline-block;
+    margin-bottom: 1.1rem;
+  }
+
+  section{
+    position: relative;
+    padding: 7rem 6vw;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  @media (max-width: 720px){
+    section{ padding: 4.5rem 6vw; }
+  }
+
+  /* ---------- reveal ---------- */
+  .reveal{
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.in{ opacity: 1; transform: translateY(0); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    overflow: hidden;
+  }
+  #field{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .stalk{
+    position: absolute;
+    bottom: -4%;
+    width: 2px;
+    background: linear-gradient(to top, var(--steppe), transparent 92%);
+    transform-origin: bottom center;
+    opacity: 0.55;
+    animation: sway 6.5s ease-in-out infinite;
+  }
+  @keyframes sway{
+    0%, 100%{ transform: rotate(var(--r1, -3deg)); }
+    50%{ transform: rotate(var(--r2, 3deg)); }
+  }
+
+  .hero-inner{ position: relative; z-index: 2; }
+
+  h1.mark{
+    font-family: var(--disp-display);
+    font-weight: 340;
+    font-variation-settings: "opsz" 9, "SOFT" 90;
+    font-size: clamp(4.5rem, 16vw, 11.5rem);
+    line-height: 0.86;
+    margin: 0 0 1.6rem 0;
+    letter-spacing: -0.01em;
+    color: var(--wheat-soft);
+    animation: settle 2.6s cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay: 0.15s;
+  }
+  @keyframes settle{
+    0%{ font-variation-settings: "opsz" 9, "SOFT" 100; font-weight: 300; letter-spacing: 0.02em; color: var(--wheat-soft); filter: blur(0.5px); }
+    100%{ font-variation-settings: "opsz" 60, "SOFT" 0; font-weight: 620; letter-spacing: -0.01em; color: var(--wheat); filter: blur(0); }
+  }
+
+  .hero p.lede{
+    max-width: 42ch;
+    font-size: clamp(1.05rem, 2vw, 1.28rem);
+    color: var(--text-dim);
+  }
+
+  .scrollcue{
+    position: absolute;
+    bottom: 2.6rem;
+    left: 6vw;
+    z-index: 2;
+    font-family: var(--disp-mono);
+    font-size: 0.7rem;
+    color: var(--iron);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .scrollcue::after{
+    content: "";
+    width: 1px; height: 34px;
+    background: linear-gradient(to bottom, var(--iron), transparent);
+    animation: down 1.8s ease-in-out infinite;
+  }
+  @keyframes down{ 0%{ opacity: 0.2; } 50%{ opacity: 1; } 100%{ opacity: 0.2; } }
+
+  /* ---------- TWO MEANINGS ---------- */
+  .duo-wrap{ padding-top: 4rem; padding-bottom: 4rem; }
+  .duo-head{ text-align: center; max-width: 60ch; margin: 0 auto 4.5rem; }
+  .duo-head h2{
+    font-family: var(--disp-display);
+    font-weight: 560;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    margin: 0 0 1rem;
+    color: var(--paper);
+  }
+  .duo-head p{ color: var(--text-dim); }
+
+  .duo{
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 90px 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  @media (max-width: 860px){
+    .duo{ grid-template-columns: 1fr; gap: 3rem; }
+    .spine-col{ display:none; }
+  }
+  .panel{ padding: 2.4rem 2rem; }
+  .panel.freedom{
+    background: linear-gradient(160deg, #1c2318, #171b16 70%);
+    border: 1px solid #2c341f;
+    border-radius: 2px;
+  }
+  .panel.will{
+    background: linear-gradient(160deg, #1e1e22, #17171a 70%);
+    border: 1px solid #35353b;
+    border-radius: 2px;
+  }
+  .panel h3{
+    font-family: var(--disp-display);
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+    font-weight: 600;
+    margin: 0.2rem 0 1rem;
+  }
+  .panel.freedom h3{ color: var(--steppe); font-variation-settings: "opsz" 30, "SOFT" 60; }
+  .panel.will h3{ color: var(--iron); font-variation-settings: "opsz" 60, "SOFT" 0; letter-spacing: -0.01em; }
+  .panel .eyebrow.f{ color: var(--steppe); }
+  .panel .eyebrow.w{ color: var(--iron); }
+  .panel p{ color: var(--text-dim); max-width: 44ch; }
+
+  .spine-col{ display:flex; align-items:center; justify-content:center; }
+  .spine-col svg{ width: 100%; height: 100%; min-height: 420px; }
+
+  .bridge{
+    max-width: 62ch;
+    margin: 4rem auto 0;
+    text-align: center;
+    font-family: var(--disp-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    color: var(--wheat-soft);
+    padding-top: 2.4rem;
+    border-top: 1px dashed #3a3d49;
+  }
+
+  /* ---------- ETYMOLOGY ---------- */
+  .etym{
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+  @media (max-width: 780px){ .etym{ grid-template-columns: 1fr; } }
+  .etym h2{
+    font-family: var(--disp-display);
+    font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+    font-weight: 560;
+    margin: 0.3rem 0;
+    color: var(--paper);
+  }
+  .etym-body p{ color: var(--text-dim); }
+  .etym-body p + p{ margin-top: 1.1rem; }
+  .etym-body strong{ color: var(--wheat-soft); font-weight: 600; }
+
+  /* ---------- VOICES ---------- */
+  .voices-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    margin-top: 3rem;
+  }
+  @media (max-width: 680px){ .voices-grid{ grid-template-columns: 1fr; } }
+  .voice{
+    background: var(--night-2);
+    padding: 2.2rem;
+  }
+  .voice .name{
+    font-family: var(--disp-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 0.9rem;
+  }
+  .voice p{ color: var(--text-dim); margin: 0; }
+
+  /* ---------- SPECTRUM (interactive) ---------- */
+  .spectrum-box{
+    margin-top: 3rem;
+    background: var(--night-2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 3rem clamp(1.4rem, 5vw, 3.5rem);
+  }
+  .spectrum-labels{
+    display:flex; justify-content: space-between;
+    font-family: var(--disp-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.1rem;
+  }
+  .spectrum-labels span:first-child{ color: var(--steppe); }
+  .spectrum-labels span:last-child{ color: var(--iron); }
+
+  input[type="range"]{
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--steppe), var(--wheat) 50%, var(--iron));
+    outline: none;
+    margin: 0.6rem 0 1.8rem;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--wheat-soft);
+    border: 3px solid var(--night);
+    box-shadow: 0 0 0 1px var(--wheat);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--wheat-soft);
+    border: 3px solid var(--night);
+    box-shadow: 0 0 0 1px var(--wheat);
+    cursor: pointer;
+  }
+
+  #spectrum-out{
+    font-family: var(--disp-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+    font-style: italic;
+    color: var(--paper);
+    min-height: 3.2em;
+  }
+
+  /* ---------- REFLECTION ---------- */
+  .reflect{
+    text-align: center;
+    padding-top: 6rem;
+    padding-bottom: 8rem;
+  }
+  .reflect h2{
+    font-family: var(--disp-display);
+    font-weight: 560;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    margin: 0 0 0.6rem;
+    color: var(--paper);
+  }
+  .reflect p.sub{ color: var(--text-dim); margin-bottom: 2.4rem; }
+
+  #reflect-form{
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+    min-height: 130px;
+  }
+  textarea{
+    width: 100%;
+    min-height: 110px;
+    resize: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #3a3d49;
+    color: var(--text-main);
+    font-family: var(--disp-display);
+    font-size: 1.25rem;
+    font-style: italic;
+    padding: 0.6rem 0.2rem;
+    text-align: center;
+    transition: border-color 0.3s ease;
+  }
+  textarea::placeholder{ color: #5c5f6b; font-style: italic; }
+  textarea:focus{ outline: none; border-color: var(--wheat); }
+  textarea:focus-visible{ outline: 2px solid var(--wheat); outline-offset: 4px; }
+
+  #release-btn{
+    margin-top: 1.6rem;
+    background: none;
+    border: 1px solid var(--iron-dim);
+    color: var(--text-main);
+    font-family: var(--disp-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.8rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease;
+  }
+  #release-btn:hover{ border-color: var(--wheat); color: var(--wheat-soft); }
+  #release-btn:focus-visible{ outline: 2px solid var(--wheat); outline-offset: 3px; }
+
+  #reflection-status{
+    min-height: 1.4em;
+    margin: 0.9rem 0 0;
+    color: var(--text-dim);
+    font-family: var(--disp-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  #disperse-layer{
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  #disperse-layer span{
+    position: absolute;
+    font-family: var(--disp-display);
+    font-style: italic;
+    font-size: 1.25rem;
+    color: var(--wheat-soft);
+    white-space: nowrap;
+    transition: transform 2.2s cubic-bezier(.2,.6,.3,1), opacity 2.2s ease;
+  }
+
+  /* ---------- TESTNET EXPLORER ---------- */
+  .testnet{
+    padding: 0 1.3rem 6.5rem;
+  }
+  .testnet-panel{
+    max-width: 760px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(214, 183, 111, 0.28);
+    border-bottom: 1px solid rgba(214, 183, 111, 0.16);
+    padding: 1.4rem 0 1.2rem;
+  }
+  .testnet-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .testnet-title{
+    color: var(--paper);
+    font-family: var(--disp-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .testnet-status{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--text-dim);
+    font-family: var(--disp-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .testnet-status::before{
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .testnet-status.online{ color: var(--wheat-soft); }
+  .testnet-status.offline{ color: #7d8292; }
+  .testnet-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem 1.2rem;
+  }
+  .testnet-item{ min-width: 0; }
+  .testnet-label{
+    display: block;
+    color: var(--text-dim);
+    font-family: var(--disp-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .testnet-value{
+    display: block;
+    color: var(--text-main);
+    font-family: var(--disp-display);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .testnet-value.hash{
+    font-family: var(--disp-mono);
+    font-size: 0.84rem;
+    letter-spacing: 0.03em;
+  }
+  @media (max-width: 720px){
+    .testnet-head{
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .testnet-grid{
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  footer{
+    text-align: center;
+    padding: 2.4rem 6vw 3rem;
+    font-family: var(--disp-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--iron-dim);
+    text-transform: uppercase;
+  }
+  footer a{
+    color: var(--wheat-soft);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+  footer a:hover{ border-color: var(--wheat-soft); }
+
+  /* ---------- DOCS SECTION ---------- */
+  #docs{ padding-top: 6rem; padding-bottom: 3rem; scroll-margin-top: 1.5rem; }
+  .docs-strip{
+    background: #1d1613;
+    border: 1px solid #3a2a22;
+    border-radius: 3px;
+    padding: 0.9rem 1.4rem;
+    font-family: var(--disp-mono);
+    font-size: 0.74rem;
+    color: var(--ember-soft, #d5604f);
+    letter-spacing: 0.02em;
+    margin-bottom: 2.4rem;
+  }
+  .docs-strip strong{ color: var(--wheat-soft); }
+  .docs-header h2{
+    font-family: var(--disp-display);
+    font-weight: 560;
+    font-variation-settings: "opsz" 60, "SOFT" 10;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin: 0 0 1rem;
+    color: var(--paper);
+  }
+  .docs-header p{ max-width: 62ch; color: var(--text-dim); font-size: 1.02rem; }
+  .status-chip{
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--disp-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.4rem 0.8rem; border-radius: 2px; margin-top: 1.3rem;
+    border: 1px solid #4a4022; color: var(--wheat-soft); background: #241f13;
+  }
+  .status-chip.dot::before{ content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .doc-layout{
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 3.5rem;
+    align-items: start;
+    margin-top: 3.5rem;
+  }
+  @media (max-width: 900px){
+    .doc-layout{ grid-template-columns: 1fr; }
+    .doc-nav{ position: static !important; order: -1; margin-bottom: 2rem; overflow-x: auto; white-space: nowrap; display: flex !important; gap: 1rem; border-left: none !important; padding-left: 0 !important; border-bottom: 1px solid var(--line); padding-bottom: 1rem; }
+    .doc-nav a{ margin-left: 0; border-left: none; padding-left: 0; flex: 0 0 auto; }
+  }
+  .doc-nav{
+    position: sticky; top: 2rem;
+    display: flex; flex-direction: column; gap: 0.1rem;
+    border-left: 1px solid var(--line);
+    padding-left: 1.1rem;
+  }
+  .doc-nav a{
+    font-family: var(--disp-mono);
+    font-size: 0.74rem;
+    color: var(--text-dim);
+    padding: 0.35rem 0;
+    transition: color .2s ease;
+    border-left: 2px solid transparent;
+    margin-left: -1.22rem;
+    padding-left: 1.1rem;
+  }
+  .doc-nav a:hover{ color: var(--paper); }
+  .doc-nav a.active{ color: var(--wheat-soft); border-left-color: var(--wheat); }
+
+  .doc-content .doc-sub{
+    padding-top: 2.8rem; margin-top: 2.8rem; border-top: 1px solid var(--line);
+  }
+  .doc-content .doc-sub:first-child{ border-top: none; margin-top: 0; padding-top: 0; }
+  .sec-head{ display:flex; align-items:baseline; gap: 0.9rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
+  .sec-num{ font-family: var(--disp-mono); color: var(--iron-dim); font-size: 0.85rem; }
+  .doc-content .doc-sub h3{
+    font-family: var(--disp-display);
+    font-weight: 560;
+    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+    color: var(--paper);
+    margin: 0;
+  }
+  .tag{
+    font-family: var(--disp-mono); font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.2rem 0.5rem; border-radius: 2px; border: 1px solid;
+  }
+  .tag.done{ color: #8ea36a; border-color: #3a4429; background: #1b2015; }
+  .tag.open{ color: var(--wheat-soft); border-color: #4a4022; background: #241f13; }
+  .tag.future{ color: var(--iron); border-color: #3a3d47; background: #1c1e26; }
+
+  .doc-content .doc-sub p{ color: var(--text-dim); max-width: 72ch; }
+  .doc-content .doc-sub p + p{ margin-top: 0.85rem; }
+  .doc-content .doc-sub strong{ color: var(--wheat-soft); font-weight: 600; }
+
+  .doc-content blockquote{
+    margin: 1.5rem 0; padding: 1.1rem 1.4rem;
+    border-left: 2px solid var(--wheat);
+    font-family: var(--disp-display); font-style: italic;
+    font-size: 1.02rem; color: var(--paper);
+    background: var(--night-2);
+  }
+
+  .status-table{ width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 0.9rem; }
+  .status-table th{
+    text-align: left; font-family: var(--disp-mono); font-size: 0.66rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--iron);
+    padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--line);
+  }
+  .status-table td{
+    padding: 0.85rem 0.9rem; border-bottom: 1px solid var(--line);
+    color: var(--text-dim); vertical-align: top;
+  }
+  .status-table tr td:first-child{ color: var(--paper); font-weight: 600; white-space: nowrap; }
+  .status-table tr:hover td{ background: var(--night-2); }
+
+  .doc-flow{ display: flex; flex-direction: column; gap: 0; margin-top: 1.5rem; }
+  .doc-flow .flow-step{ display: grid; grid-template-columns: 30px 1fr; gap: 1rem; padding: 0.9rem 0; }
+  .doc-flow .flow-step .idx{ font-family: var(--disp-mono); color: var(--iron-dim); font-size: 0.82rem; padding-top: 0.1rem; }
+  .doc-flow .flow-step:not(:last-child){ border-bottom: 1px dashed var(--line); }
+  .doc-flow .flow-step p{ margin: 0; color: var(--text-dim); }
+
+  .doc-roadmap{ position: relative; margin-top: 1.8rem; padding-left: 1.5rem; }
+  .doc-roadmap::before{
+    content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 1px;
+    background: linear-gradient(to bottom, var(--wheat), var(--iron-dim));
+  }
+  .rm-item{ position: relative; padding-bottom: 1.9rem; }
+  .rm-item:last-child{ padding-bottom: 0; }
+  .rm-item::before{
+    content: ""; position: absolute; left: -1.5rem; top: 3px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--night); border: 2px solid var(--iron-dim);
+  }
+  .rm-item.current::before{ border-color: var(--wheat); background: var(--wheat); }
+  .rm-item .rm-tag{ font-family: var(--disp-mono); font-size: 0.7rem; color: var(--wheat-soft); letter-spacing: 0.06em; }
+  .rm-item h4{ font-family: var(--disp-display); font-size: 1.08rem; font-weight: 600; margin: 0.25rem 0 0.3rem; color: var(--paper); }
+  .rm-item p{ margin: 0; color: var(--text-dim); font-size: 0.92rem; }
+
+  .qgrid{
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.65rem 2rem;
+    margin-top: 1.5rem; list-style: none; padding: 0;
+  }
+  @media (max-width: 640px){ .qgrid{ grid-template-columns: 1fr; } }
+  .qgrid li{ color: var(--text-dim); font-size: 0.92rem; padding-left: 1.1rem; position: relative; }
+  .qgrid li::before{ content: "—"; position: absolute; left: 0; color: var(--iron-dim); }
+
+  .final-disclaimer{
+    background: #1d1613; border: 1px solid #3a2a22; border-radius: 3px;
+    padding: 1.6rem 1.8rem; margin-top: 1.5rem;
+  }
+  .final-disclaimer p{ color: #c9a99a !important; margin: 0; }
+  .final-disclaimer p + p{ margin-top: 0.65rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div id="field"></div>
+  <div class="hero-inner">
+    <span class="eyebrow">Одне слово. Два сенси.</span>
+    <h1 class="mark">ВОЛЯ</h1>
+    <p class="lede">Слово, яким називають і простір без чужої вказівки, і силу, що не дає зламатися. Свобода — зовні. Витримка — всередині.</p>
+  </div>
+  <div class="scrollcue">Гортай далі</div>
+</section>
+
+<section class="duo-wrap">
+  <div class="duo-head reveal">
+    <h2>Два значення одного кореня</h2>
+    <p>В українській мові «воля» ніколи не розпадається на два різні слова — бо це не два поняття, а два боки одного стану.</p>
+  </div>
+
+  <div class="duo">
+    <div class="panel freedom reveal">
+      <span class="eyebrow f">Воля №1</span>
+      <h3>Свобода</h3>
+      <p>Право жити, обирати й говорити без чужого дозволу. Простір, де людину чи народ ніхто не тримає в межах, накреслених кимось іншим. Степ, вітер, неоране поле — образи, якими це відчуття називали віками.</p>
+    </div>
+
+    <div class="spine-col reveal">
+      <svg viewBox="0 0 90 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M45,0 C10,50 80,90 45,140 C15,180 75,220 45,260 C25,290 65,310 45,340 C40,350 50,360 45,370 L45,420"
+              fill="none" stroke="url(#spineGrad)" stroke-width="1.4"/>
+        <defs>
+          <linearGradient id="spineGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6b7a52"/>
+            <stop offset="100%" stop-color="#9a9ca3"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="panel will reveal">
+      <span class="eyebrow w">Воля №2</span>
+      <h3>Сила волі</h3>
+      <p>Здатність тримати прийняте рішення тоді, коли легше було б відступити. Внутрішній стрижень, що не згинається під тиском обставин, втоми чи страху. Не поле — а хребет.</p>
+    </div>
+  </div>
+
+  <p class="bridge reveal">Одне рідко тримається без другого: народ без внутрішньої стійкості не втримає здобуту свободу, а людина без свободи не має простору, щоб цю стійкість виявити.</p>
+</section>
+
+<section class="etym">
+  <div class="reveal">
+    <span class="eyebrow">Походження</span>
+    <h2>Звідки прийшло слово</h2>
+  </div>
+  <div class="etym-body reveal">
+    <p>«Воля» походить із праслов'янського кореня, спільного зі словом <strong>«воліти»</strong> — тобто бажати, обирати, хотіти. Уже в самому корені свобода й вибір зрощені докупи: бути вільним означало мати право хотіти по-своєму.</p>
+    <p>У народній мові «воля» довго означала передусім відсутність панського примусу — стан селянина, який сам розпоряджається своєю працею і часом. Пізніше слово розширилося на волю нації й державну незалежність, а водночас закріпилося й у зовсім іншому контексті — як риса характеру, «сильна воля».</p>
+    <p>Ця подвійність — не випадковість мови, а наслідок того, як через словник передавали досвід: щоб зберегти зовнішню волю, поколінням доводилося виявляти волю внутрішню.</p>
+  </div>
+</section>
+
+<section class="voices">
+  <div class="reveal">
+    <span class="eyebrow">Голоси</span>
+    <h2 style="font-family: var(--disp-display); font-weight:560; font-size: clamp(1.8rem, 3.4vw, 2.4rem); color: var(--paper); margin: 0.3rem 0 0;">Як про волю писали українські автори</h2>
+  </div>
+
+  <div class="voices-grid reveal">
+    <div class="voice">
+      <div class="name">Тарас Шевченко</div>
+      <p>У його поезії воля — це те, заради чого варто пройти через каторгу й заслання; нездобута свобода народу описана як особистий, невідкладний біль, а не абстрактне гасло.</p>
+    </div>
+    <div class="voice">
+      <div class="name">Іван Франко</div>
+      <p>Наполягав, що волю не отримують у дар — її здобувають працею, освітою й наполегливою, майже щоденною дисципліною, зближуючи цим національну свободу із особистою силою волі.</p>
+    </div>
+    <div class="voice">
+      <div class="name">Леся Українка</div>
+      <p>Показувала волю як внутрішній вибір навіть у неволі: героїня може бути в'язнем обставин і водночас залишатися вільною в тому, як вона до цього ставиться.</p>
+    </div>
+    <div class="voice">
+      <div class="name">Василь Стус</div>
+      <p>У таборових текстах говорив про волю як про те, що не можна відібрати разом із свободою пересування — стійкість духу, яку зберігав саме через силу волі.</p>
+    </div>
+  </div>
+</section>
+
+<section class="spectrum">
+  <div class="reveal">
+    <span class="eyebrow">Спробуй сам</span>
+    <h2 style="font-family: var(--disp-display); font-weight:560; font-size: clamp(1.8rem, 3.4vw, 2.4rem); color: var(--paper); margin: 0.3rem 0 0;">Де на цій шкалі твоя воля зараз?</h2>
+  </div>
+
+  <div class="spectrum-box reveal">
+    <div class="spectrum-labels">
+      <span>Зовнішня свобода</span>
+      <span>Внутрішня стійкість</span>
+    </div>
+    <input type="range" id="spectrum" min="0" max="100" value="50" aria-label="Шкала від зовнішньої свободи до внутрішньої стійкості">
+    <p id="spectrum-out"></p>
+  </div>
+</section>
+
+<section class="reflect">
+  <div class="reveal">
+    <h2>Що для тебе означає воля?</h2>
+    <p class="sub">Напиши кілька слів. Це нікуди не збережеться — просто відпусти їх.</p>
+    <div id="reflect-form">
+      <textarea id="reflect-text" placeholder="Наприклад: можливість казати «ні»…" maxlength="140"></textarea>
+      <div id="disperse-layer"></div>
+      <br>
+      <button id="release-btn" type="button">Відпустити на вітер</button>
+      <p id="reflection-status" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<section class="testnet" aria-labelledby="testnet-title">
+  <div class="testnet-panel reveal" id="volya-testnet">
+    <div class="testnet-head">
+      <div class="testnet-title" id="testnet-title">VOLYA TESTNET</div>
+      <div class="testnet-status offline" id="testnet-status">OFFLINE</div>
+    </div>
+    <div class="testnet-grid" aria-live="polite">
+      <div class="testnet-item">
+        <span class="testnet-label">Last block</span>
+        <span class="testnet-value" id="testnet-last-block">—</span>
+      </div>
+      <div class="testnet-item">
+        <span class="testnet-label">Last hash</span>
+        <span class="testnet-value hash" id="testnet-last-hash">—</span>
+      </div>
+      <div class="testnet-item">
+        <span class="testnet-label">Blocks total</span>
+        <span class="testnet-value" id="testnet-blocks-total">—</span>
+      </div>
+      <div class="testnet-item">
+        <span class="testnet-label">Reflection events</span>
+        <span class="testnet-value" id="testnet-reflections">—</span>
+      </div>
+      <div class="testnet-item">
+        <span class="testnet-label">Pending events</span>
+        <span class="testnet-value" id="testnet-pending">—</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="docs">
+  <div class="docs-strip reveal">
+    <strong>v0.1 · рання концепція.</strong> Не інвестиційна пропозиція і не обіцянка прибутку — детальніше в розділі «Застереження» нижче.
+  </div>
+
+  <div class="docs-header reveal">
+    <span class="eyebrow">Документація</span>
+    <h2>Протокол VOLYA</h2>
+    <p>Концептуальний і технічний опис раннього прототипу: що вже працює в коді, а що поки залишається напрямом дослідження. Документ навмисно розділяє ці дві категорії.</p>
+    <span class="status-chip dot">White Paper v0.1 · 23.08.2026</span>
+  </div>
+
+  <div class="doc-layout">
+    <nav class="doc-nav" id="doc-nav">
+      <a href="#doc-idea">01 · Ідея</a>
+      <a href="#doc-problem">02 · Проблема</a>
+      <a href="#doc-vision">03 · Бачення мережі</a>
+      <a href="#doc-status">04 · Реалізовано</a>
+      <a href="#doc-flow">05 · Транзакція</a>
+      <a href="#doc-coin">06 · VOLYA Coin</a>
+      <a href="#doc-agents">07 · AI-агенти</a>
+      <a href="#doc-security">08 · Безпека</a>
+      <a href="#doc-usecases">09 · Застосування</a>
+      <a href="#doc-site">10 · Сайт</a>
+      <a href="#doc-roadmap">11 · Roadmap</a>
+      <a href="#doc-open">12 · Відкриті питання</a>
+      <a href="#doc-disclaimer">13 · Застереження</a>
+    </nav>
+
+    <div class="doc-content">
+
+      <div class="doc-sub" id="doc-idea">
+        <div class="sec-head"><span class="sec-num">01</span><h3>Ідея VOLYA</h3></div>
+        <p>Слово «воля» поєднує свободу вибору та внутрішню здатність дотримуватися власного рішення. VOLYA переносить цю ідею у цифрове середовище: люди та програмні AI-агенти можуть мати криптографічну ідентичність, виконувати корисну цифрову роботу та взаємодіяти за прозорими правилами.</p>
+        <p>Головна мета на ранньому етапі — не створити спекулятивний актив, а дослідити, чи може VOLYA стати відкритим протоколом для підтверджуваної цифрової взаємодії.</p>
+        <blockquote>Свобода без відповідальності не створює довіри. Автономність без правил не створює мережі.</blockquote>
+      </div>
+
+      <div class="doc-sub" id="doc-problem">
+        <div class="sec-head"><span class="sec-num">02</span><h3>Проблема</h3></div>
+        <p>Автономні програми вже можуть аналізувати дані, створювати цифрові результати та виконувати послідовності дій. Але економічна взаємодія між людиною, агентом та іншим агентом потребує чітких механізмів: хто підписав дію, що саме було виконано, кому належить адреса, які витрати дозволені та коли потрібне підтвердження людини.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-vision">
+        <div class="sec-head"><span class="sec-num">03</span><h3>Бачення мережі</h3></div>
+        <p>VOLYA розглядається як експериментальна мережа, у якій криптографічна адреса може належати людині, сервісу або AI-агенту. Агент не вважається юридичною особою лише через наявність адреси — контроль ключів, права доступу та фінансові ліміти визначає власник або оператор системи.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-status">
+        <div class="sec-head"><span class="sec-num">04</span><h3>Що вже реалізовано</h3><span class="tag done">В коді</span></div>
+        <p>Компоненти нижче вже працюють у навчальному прототипі — це не плани, а поточний стан.</p>
+        <table class="status-table">
+          <thead><tr><th>Компонент</th><th>Стан прототипу</th></tr></thead>
+          <tbody>
+            <tr><td>Wallet</td><td>Локальний приватний ключ; адреса формується з публічного ключа.</td></tr>
+            <tr><td>Підпис</td><td>ECDSA SECP256K1 для підпису та перевірки транзакцій.</td></tr>
+            <tr><td>Transaction</td><td>Відправник, одержувач, сума, публічний ключ і підпис.</td></tr>
+            <tr><td>Merkle tree</td><td>Побудова дерева та обчислення Merkle root для транзакцій блоку.</td></tr>
+            <tr><td>Block</td><td>Індекс, час, транзакції, попередній hash, difficulty, nonce, hash.</td></tr>
+            <tr><td>Mining</td><td>Proof-of-Work: пошук nonce відповідно до заданої складності.</td></tr>
+            <tr><td>Node</td><td>Власний chain, mempool, peers та блокування конкурентних змін.</td></tr>
+            <tr><td>P2P</td><td>Обмін транзакціями й блоками, реєстрація сусідніх вузлів через HTTP.</td></tr>
+            <tr><td>Consensus</td><td>Навчальна логіка вибору довшого валідного ланцюга.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="doc-sub" id="doc-flow">
+        <div class="sec-head"><span class="sec-num">05</span><h3>Як виглядає транзакція</h3></div>
+        <div class="doc-flow">
+          <div class="flow-step"><span class="idx">01</span><p>Користувач або агент створює транзакцію й підписує її приватним ключем.</p></div>
+          <div class="flow-step"><span class="idx">02</span><p>Підписана транзакція передається вузлу мережі.</p></div>
+          <div class="flow-step"><span class="idx">03</span><p>Вузол перевіряє підпис, відхиляє некоректні дані та додає валідну транзакцію до mempool.</p></div>
+          <div class="flow-step"><span class="idx">04</span><p>Майнер формує кандидат у блок, обчислює Merkle root і виконує Proof-of-Work.</p></div>
+          <div class="flow-step"><span class="idx">05</span><p>Після прийняття блоку іншими вузлами транзакція стає частиною ланцюга.</p></div>
+        </div>
+      </div>
+
+      <div class="doc-sub" id="doc-coin">
+        <div class="sec-head"><span class="sec-num">06</span><h3>VOLYA Coin та майнінг</h3><span class="tag open">Не завершено</span></div>
+        <p>Прототип уміє виконувати Proof-of-Work, але сам факт майнінгу не створює ринкової вартості. Щоб VOLYA стала повноцінною монетою, потрібно окремо визначити правила емісії: винагороду за блок, максимальну або необмежену пропозицію, зміну складності, комісії, початковий розподіл та захист від надмірної концентрації.</p>
+        <p>Ці параметри у v0.1 навмисно не фіксуються. Їх слід визначати після моделювання, а не підбирати заради красивих чисел.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-agents">
+        <div class="sec-head"><span class="sec-num">07</span><h3>AI-агенти</h3><span class="tag future">Майбутня модель</span></div>
+        <p>Модель передбачає, що агент може працювати з окремою адресою та обмеженим гаманцем. Наприклад, він може отримати винагороду за перевірюваний цифровий результат, оплатити дозволений API або передати винагороду іншому агенту.</p>
+        <p>Критичні перекази можуть вимагати підтвердження людини, а ключі — зберігатися поза мовною моделлю, у спеціальному сховищі.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-security">
+        <div class="sec-head"><span class="sec-num">08</span><h3>Безпека і принципи</h3></div>
+        <p>Приватні ключі не повинні публікуватися, передаватися у промптах або зберігатися у відкритому коді. Для агентів потрібні ліміти витрат, журнал дій, дозволені адреси й операції, можливість негайного відкликання доступу та принцип найменших привілеїв.</p>
+        <p>VOLYA не повинна залежати від припущення, що автономний агент ніколи не помилиться.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-usecases">
+        <div class="sec-head"><span class="sec-num">09</span><h3>Потенційні способи використання</h3><span class="tag future">Дослідження</span></div>
+        <p>На етапі дослідження розглядаються: винагороди за цифрову роботу, мікроплатежі між сервісами, оплата API та обчислень, підтвердження виконання завдань, експериментальні економіки AI-агентів, гранти або винагороди учасникам відкритої мережі. Кожен сценарій потребує окремої перевірки технічної, економічної та правової життєздатності.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-site">
+        <div class="sec-head"><span class="sec-num">10</span><h3>Сайт і публічна ідентичність</h3></div>
+        <p>Поточна веб-концепція VOLYA розкриває слово через два значення — зовнішню свободу та внутрішню стійкість. Надалі сайт може отримати розширення: статус testnet, explorer, вихідний код, правила участі та актуальну версію White Paper.</p>
+      </div>
+
+      <div class="doc-sub" id="doc-roadmap">
+        <div class="sec-head"><span class="sec-num">11</span><h3>Roadmap</h3></div>
+        <div class="doc-roadmap">
+          <div class="rm-item current">
+            <span class="rm-tag">0.1 — Prototype</span>
+            <h4>Поточний етап</h4>
+            <p>Два локальні вузли, транзакції, блоки, підписи, PoW, синхронізація.</p>
+          </div>
+          <div class="rm-item">
+            <span class="rm-tag">0.2 — Hardening</span>
+            <h4>Зміцнення</h4>
+            <p>Валідація ланцюга, захист від повторів, чіткі правила блоків.</p>
+          </div>
+          <div class="rm-item">
+            <span class="rm-tag">0.3 — Economics lab</span>
+            <h4>Лабораторія економіки</h4>
+            <p>Симуляція емісії, block reward, difficulty adjustment, комісій та атак.</p>
+          </div>
+          <div class="rm-item">
+            <span class="rm-tag">0.4 — Private testnet</span>
+            <h4>Приватний тестнет</h4>
+            <p>Кілька незалежних вузлів на різних машинах чи серверах.</p>
+          </div>
+          <div class="rm-item">
+            <span class="rm-tag">0.5 — Agent wallet sandbox</span>
+            <h4>Пісочниця гаманців агентів</h4>
+            <p>Гаманці агентів з малими лімітами та підтвердженням людини.</p>
+          </div>
+          <div class="rm-item">
+            <span class="rm-tag">0.6 — Explorer/API</span>
+            <h4>Публічний доступ</h4>
+            <p>Публічне читання блоків, транзакцій та стану тестової мережі.</p>
+          </div>
+          <div class="rm-item">
+            <span class="rm-tag">1.0 — Decision point</span>
+            <h4>Точка рішення</h4>
+            <p>Лише після тестів: власний mainnet, токен на іншому ланцюзі, або пауза проєкту.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-sub" id="doc-open">
+        <div class="sec-head"><span class="sec-num">12</span><h3>Відкриті питання перед v0.2</h3></div>
+        <ul class="qgrid">
+          <li>Модель обліку коштів</li>
+          <li>Правила coinbase-транзакції</li>
+          <li>Block reward</li>
+          <li>Цільовий block time</li>
+          <li>Difficulty adjustment</li>
+          <li>Максимальна пропозиція</li>
+          <li>Комісії</li>
+          <li>Формат адрес</li>
+          <li>Версіювання протоколу</li>
+          <li>Правила fork/consensus</li>
+          <li>Зберігання chain на диску</li>
+          <li>Мережевий захист</li>
+          <li>Модель дозволів для AI-агентів</li>
+          <li>Ліцензія вихідного коду</li>
+        </ul>
+      </div>
+
+      <div class="doc-sub" id="doc-disclaimer">
+        <div class="sec-head"><span class="sec-num">13</span><h3>Застереження</h3></div>
+        <div class="final-disclaimer">
+          <p>VOLYA v0.1 є експериментальним програмним проєктом. Документ не є фінансовою, юридичною чи інвестиційною порадою. VOLYA на цьому етапі не має гарантованої ринкової ціни, ліквідності або дохідності.</p>
+          <p>Запуск публічного токена чи мережі потребуватиме додаткового технічного аудиту, тестування безпеки та оцінки застосовного законодавства.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>Воля · 2026 · <a href="#docs" id="docs-link">Документація</a></footer>
+
+<script>
+  // ---------- reveal on scroll ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---------- hero wheat field ----------
+  const field = document.getElementById('field');
+  const N = 46;
+  for (let i = 0; i < N; i++) {
+    const s = document.createElement('div');
+    s.className = 'stalk';
+    const left = (i / N) * 100 + (Math.random() * 1.5 - 0.75);
+    const h = 30 + Math.random() * 55;
+    const r1 = -2 - Math.random() * 5;
+    const r2 = 2 + Math.random() * 5;
+    const dur = 5 + Math.random() * 4;
+    const delay = Math.random() * -8;
+    s.style.left = left + '%';
+    s.style.height = h + 'vh';
+    s.style.setProperty('--r1', r1 + 'deg');
+    s.style.setProperty('--r2', r2 + 'deg');
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay = delay + 's';
+    s.style.opacity = (0.25 + Math.random() * 0.4).toFixed(2);
+    field.appendChild(s);
+  }
+  let mx = 0.5;
+  window.addEventListener('mousemove', (e) => {
+    mx = e.clientX / window.innerWidth;
+    field.style.transform = `translateX(${(mx - 0.5) * -14}px)`;
+  });
+
+  // ---------- spectrum ----------
+  const spectrum = document.getElementById('spectrum');
+  const out = document.getElementById('spectrum-out');
+  const messages = [
+    [0, "Простір без меж — але без стрижня він розвіюється, як вітер у полі."],
+    [25, "Переважно свобода вибору: багато відкритих дверей, ще не всі випробувані."],
+    [50, "Рівновага: свобода дає простір, стійкість — не дає з нього втекти."],
+    [75, "Переважно дисципліна: обране вже тримається саме, майже без зусиль."],
+    [100, "Незламний стрижень — але справжню ціну він має лише там, де є вибір."]
+  ];
+  function updateSpectrum(v){
+    let msg = messages[0][1];
+    for (const [t, m] of messages) { if (v >= t) msg = m; }
+    out.textContent = msg;
+  }
+  spectrum.addEventListener('input', () => updateSpectrum(+spectrum.value));
+  updateSpectrum(50);
+
+  // ---------- reflection dispersal ----------
+  const btn = document.getElementById('release-btn');
+  const ta = document.getElementById('reflect-text');
+  const layer = document.getElementById('disperse-layer');
+  const status = document.getElementById('reflection-status');
+  const VOLYA_API_URL = "http://127.0.0.1:5000";
+  const testnetEls = {
+    status: document.getElementById('testnet-status'),
+    lastBlock: document.getElementById('testnet-last-block'),
+    lastHash: document.getElementById('testnet-last-hash'),
+    blocksTotal: document.getElementById('testnet-blocks-total'),
+    reflections: document.getElementById('testnet-reflections'),
+    pending: document.getElementById('testnet-pending')
+  };
+
+  function bytesToHex(bytes){
+    return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function shortenHash(hash){
+    if (!hash) return '—';
+    return hash.length > 18 ? `${hash.slice(0, 10)}…${hash.slice(-8)}` : hash;
+  }
+
+  function isReflectionEvent(tx){
+    return tx?.record_type === 'reflection' || typeof tx?.event_hash === 'string';
+  }
+
+  function setExplorerOffline(){
+    if (!testnetEls.status) return;
+    testnetEls.status.textContent = 'OFFLINE';
+    testnetEls.status.classList.remove('online');
+    testnetEls.status.classList.add('offline');
+    testnetEls.lastBlock.textContent = '—';
+    testnetEls.lastHash.textContent = '—';
+    testnetEls.lastHash.title = '';
+    testnetEls.blocksTotal.textContent = '—';
+    testnetEls.reflections.textContent = '—';
+    testnetEls.pending.textContent = '—';
+  }
+
+  function setExplorerOnline(chainData, mempoolData){
+    const chain = Array.isArray(chainData?.chain) ? chainData.chain : [];
+    const lastBlock = chain.at(-1);
+    const reflectionCount = chain.reduce((sum, block) => {
+      const txs = Array.isArray(block?.transactions) ? block.transactions : [];
+      return sum + txs.filter(isReflectionEvent).length;
+    }, 0);
+    const pendingTxs = Array.isArray(mempoolData?.transactions) ? mempoolData.transactions : [];
+    const pendingReflections = pendingTxs.filter(isReflectionEvent).length;
+
+    testnetEls.status.textContent = 'ONLINE';
+    testnetEls.status.classList.remove('offline');
+    testnetEls.status.classList.add('online');
+    testnetEls.lastBlock.textContent = lastBlock?.index ?? '—';
+    testnetEls.lastHash.textContent = shortenHash(lastBlock?.hash);
+    testnetEls.lastHash.title = lastBlock?.hash || '';
+    testnetEls.blocksTotal.textContent = chainData?.length ?? chain.length;
+    testnetEls.reflections.textContent = reflectionCount;
+    testnetEls.pending.textContent = pendingReflections;
+  }
+
+  async function updateVolyaExplorer(){
+    if (!testnetEls.status) return;
+    try {
+      const [healthRes, chainRes, mempoolRes] = await Promise.all([
+        fetch(`${VOLYA_API_URL}/health`, { cache: 'no-store' }),
+        fetch(`${VOLYA_API_URL}/chain`, { cache: 'no-store' }),
+        fetch(`${VOLYA_API_URL}/mempool`, { cache: 'no-store' })
+      ]);
+      if (!healthRes.ok || !chainRes.ok || !mempoolRes.ok) {
+        throw new Error('VOLYA node is unavailable');
+      }
+      const [healthData, chainData, mempoolData] = await Promise.all([
+        healthRes.json(),
+        chainRes.json(),
+        mempoolRes.json()
+      ]);
+      if (healthData?.status !== 'ok') {
+        throw new Error('VOLYA node is not healthy');
+      }
+      setExplorerOnline(chainData, mempoolData);
+    } catch {
+      setExplorerOffline();
+    }
+  }
+
+  async function recordReflectionEvent(reflectionText){
+    if (!window.crypto?.getRandomValues || !window.crypto?.subtle?.digest) {
+      throw new Error('Web Crypto API is unavailable');
+    }
+
+    const timestamp = Math.floor(Date.now() / 1000);
+    const nonceBytes = new Uint8Array(16);
+    crypto.getRandomValues(nonceBytes);
+    const client_nonce = bytesToHex(nonceBytes);
+
+    let hashSource = reflectionText + timestamp + client_nonce;
+    reflectionText = '';
+    const encoded = new TextEncoder().encode(hashSource);
+    hashSource = '';
+
+    const digest = await crypto.subtle.digest('SHA-256', encoded);
+    const event_hash = bytesToHex(new Uint8Array(digest));
+
+    const response = await fetch(`${VOLYA_API_URL}/events/reflection`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event_hash,
+        timestamp,
+        client_nonce,
+        address: null
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('VOLYA testnet rejected the event');
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    const text = ta.value.trim();
+    if (!text) { ta.focus(); return; }
+    if (status) status.textContent = '';
+    recordReflectionEvent(text)
+      .then(() => {
+        if (status) status.textContent = 'Подію записано в VOLYA testnet';
+        updateVolyaExplorer();
+      })
+      .catch(() => {
+        if (status) status.textContent = 'Подію не вдалося записати в VOLYA testnet';
+        updateVolyaExplorer();
+      });
+
+    const words = text.split(/\s+/);
+    layer.innerHTML = '';
+    const rect = ta.getBoundingClientRect();
+    const parentRect = ta.parentElement.getBoundingClientRect();
+
+    words.forEach((w, i) => {
+      const span = document.createElement('span');
+      span.textContent = w;
+      const x = 20 + (i % 6) * ((rect.width - 40) / 6);
+      const y = rect.top - parentRect.top + rect.height / 2;
+      span.style.left = x + 'px';
+      span.style.top = y + 'px';
+      span.style.opacity = '1';
+      layer.appendChild(span);
+    });
+
+    ta.value = '';
+    ta.style.opacity = '0';
+    ta.style.transition = 'opacity 0.4s ease';
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const spans = layer.querySelectorAll('span');
+        spans.forEach((span) => {
+          const dx = (Math.random() - 0.5) * 500;
+          const dy = -150 - Math.random() * 220;
+          const rot = (Math.random() - 0.5) * 60;
+          span.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg)`;
+          span.style.opacity = '0';
+        });
+      });
+    });
+
+    setTimeout(() => {
+      ta.style.opacity = '1';
+      layer.innerHTML = '';
+    }, 2400);
+  });
+  updateVolyaExplorer();
+  window.addEventListener('focus', updateVolyaExplorer);
+
+  // ---------- docs link: pure in-page smooth scroll, no navigation ----------
+  const docsLink = document.getElementById('docs-link');
+  const docsSection = document.getElementById('docs');
+  if (docsLink && docsSection) {
+    docsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      docsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // ---------- docs section scrollspy ----------
+  const docLinks = document.querySelectorAll('#doc-nav a');
+  const docSubs = document.querySelectorAll('.doc-sub');
+  docLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(link.getAttribute('href').slice(1));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  if (docLinks.length && docSubs.length) {
+    const docIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          docLinks.forEach(l => l.classList.remove('active'));
+          const link = document.querySelector('#doc-nav a[href="#' + e.target.id + '"]');
+          if (link) link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -70% 0px' });
+    docSubs.forEach(s => docIo.observe(s));
+  }
+</script>
+
+</body>
+</html>
