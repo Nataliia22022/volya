@@ -459,6 +459,161 @@
     font-size: 0.84rem;
     letter-spacing: 0.03em;
   }
+
+  .block-explorer{
+    padding: 0 1.3rem 6.5rem;
+  }
+  .block-explorer-panel{
+    max-width: 960px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(214, 183, 111, 0.28);
+    padding-top: 2.2rem;
+  }
+  .block-explorer-head{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.4rem;
+    margin-bottom: 1.4rem;
+  }
+  .block-explorer-title{
+    color: var(--paper);
+    font-family: var(--disp-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .block-explorer-meta{
+    color: var(--text-dim);
+    font-family: var(--disp-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .block-list{
+    display: grid;
+    gap: 0.75rem;
+  }
+  .block-card{
+    border: 1px solid var(--line);
+    background: rgba(27, 30, 41, 0.72);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .block-toggle{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 110px 1.2fr 1.2fr 100px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .block-toggle:hover{ background: rgba(216, 166, 62, 0.06); }
+  .block-toggle:focus-visible{ outline: 2px solid var(--wheat); outline-offset: -2px; }
+  .block-number{
+    color: var(--wheat-soft);
+    font-family: var(--disp-display);
+    font-size: 1.2rem;
+  }
+  .block-badge{
+    display: inline-block;
+    margin-top: 0.2rem;
+    color: var(--steppe);
+    font-family: var(--disp-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .block-field{ min-width: 0; }
+  .block-label{
+    display: block;
+    color: var(--iron);
+    font-family: var(--disp-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.22rem;
+  }
+  .block-value{
+    display: block;
+    color: var(--text-main);
+    font-family: var(--disp-mono);
+    font-size: 0.78rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .block-count{
+    color: var(--paper);
+    font-family: var(--disp-mono);
+    font-size: 0.78rem;
+    text-align: right;
+  }
+  .block-details{
+    display: none;
+    padding: 0 1.1rem 1.1rem;
+    border-top: 1px solid var(--line);
+  }
+  .block-card.open .block-details{ display: block; }
+  .block-detail-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+    padding: 1rem 0;
+  }
+  .block-detail-grid .wide{
+    grid-column: 1 / -1;
+  }
+  .tx-list{
+    display: grid;
+    gap: 0.6rem;
+  }
+  .tx-card{
+    border: 1px solid rgba(51, 55, 69, 0.72);
+    background: rgba(18, 20, 28, 0.72);
+    border-radius: 3px;
+    padding: 0.85rem;
+  }
+  .tx-kind{
+    color: var(--wheat-soft);
+    font-family: var(--disp-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+  }
+  .tx-row{
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 0.7rem;
+    color: var(--text-dim);
+    font-size: 0.84rem;
+  }
+  .tx-row + .tx-row{ margin-top: 0.25rem; }
+  .tx-row span:first-child{
+    color: var(--iron);
+    font-family: var(--disp-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .tx-row span:last-child{
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-family: var(--disp-mono);
+  }
+  .explorer-message{
+    color: var(--text-dim);
+    font-family: var(--disp-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    padding: 1rem 0;
+  }
   @media (max-width: 720px){
     .testnet-head{
       align-items: flex-start;
@@ -467,6 +622,17 @@
     .testnet-grid{
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .block-explorer-head{
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .block-toggle{
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .block-count{ text-align: left; }
+    .block-detail-grid{ grid-template-columns: 1fr; }
+    .tx-row{ grid-template-columns: 1fr; gap: 0.15rem; }
   }
 
   footer{
@@ -783,6 +949,18 @@
   </div>
 </section>
 
+<section class="block-explorer" aria-labelledby="block-explorer-title">
+  <div class="block-explorer-panel reveal">
+    <div class="block-explorer-head">
+      <div class="block-explorer-title" id="block-explorer-title">VOLYA BLOCK EXPLORER</div>
+      <div class="block-explorer-meta" id="block-explorer-meta">LOADING CHAIN</div>
+    </div>
+    <div class="block-list" id="block-list" aria-live="polite">
+      <div class="explorer-message">Завантаження блоків VOLYA…</div>
+    </div>
+  </div>
+</section>
+
 <section id="docs">
   <div class="docs-strip reveal">
     <strong>v0.1 · рання концепція.</strong> Не інвестиційна пропозиція і не обіцянка прибутку — детальніше в розділі «Застереження» нижче.
@@ -1031,6 +1209,10 @@
     reflections: document.getElementById('testnet-reflections'),
     pending: document.getElementById('testnet-pending')
   };
+  const explorerEls = {
+    meta: document.getElementById('block-explorer-meta'),
+    list: document.getElementById('block-list')
+  };
 
   function bytesToHex(bytes){
     return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
@@ -1045,6 +1227,148 @@
     return tx?.record_type === 'reflection' || typeof tx?.event_hash === 'string';
   }
 
+  function isCoinbaseTransaction(tx){
+    return tx?.sender_address === 'SYSTEM' && !isReflectionEvent(tx);
+  }
+
+  function formatVolyaTime(timestamp){
+    if (typeof timestamp !== 'number' || Number.isNaN(timestamp)) return '—';
+    const millis = timestamp > 1000000000000 ? timestamp : timestamp * 1000;
+    return new Date(millis).toLocaleString('uk-UA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  }
+
+  function makeEl(tag, className, text){
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined && text !== null) el.textContent = text;
+    return el;
+  }
+
+  function addField(parent, label, value, title){
+    const item = makeEl('div', 'block-field');
+    item.appendChild(makeEl('span', 'block-label', label));
+    const val = makeEl('span', 'block-value', value ?? '—');
+    if (title) val.title = title;
+    item.appendChild(val);
+    parent.appendChild(item);
+  }
+
+  function addTxRow(parent, label, value){
+    const row = makeEl('div', 'tx-row');
+    row.appendChild(makeEl('span', '', label));
+    row.appendChild(makeEl('span', '', value ?? '—'));
+    parent.appendChild(row);
+  }
+
+  function renderTransaction(tx, blockIndex){
+    const card = makeEl('div', 'tx-card');
+    const kind = isReflectionEvent(tx)
+      ? 'REFLECTION'
+      : isCoinbaseTransaction(tx)
+        ? (blockIndex === 0 ? 'GENESIS RECORD' : 'MINING REWARD')
+        : 'TRANSACTION';
+    card.appendChild(makeEl('div', 'tx-kind', kind));
+
+    if (isReflectionEvent(tx)) {
+      addTxRow(card, 'event_hash', tx.event_hash);
+      addTxRow(card, 'client_nonce', tx.client_nonce);
+      addTxRow(card, 'timestamp', formatVolyaTime(tx.timestamp));
+      return card;
+    }
+
+    if (isCoinbaseTransaction(tx)) {
+      addTxRow(card, 'recipient', tx.recipient_address);
+      addTxRow(card, 'amount', `${tx.amount ?? 0} VOLYA`);
+      return card;
+    }
+
+    addTxRow(card, 'sender', tx.sender_address);
+    addTxRow(card, 'recipient', tx.recipient_address);
+    addTxRow(card, 'amount', `${tx.amount ?? 0} VOLYA`);
+    return card;
+  }
+
+  function renderBlockExplorer(chainData){
+    if (!explorerEls.list) return;
+    const chain = Array.isArray(chainData?.chain) ? chainData.chain : [];
+    explorerEls.list.innerHTML = '';
+
+    if (!chain.length) {
+      explorerEls.meta.textContent = 'NO BLOCKS';
+      explorerEls.list.appendChild(makeEl('div', 'explorer-message', 'Ланцюжок порожній або відповідь /chain не містить блоків.'));
+      return;
+    }
+
+    explorerEls.meta.textContent = `${chainData?.length ?? chain.length} BLOCKS`;
+    [...chain].reverse().forEach((block, position) => {
+      const txs = Array.isArray(block?.transactions) ? block.transactions : [];
+      const eventCount = txs.filter(isReflectionEvent).length;
+      const card = makeEl('article', 'block-card');
+      if (position === 0) card.classList.add('open');
+
+      const toggle = makeEl('button', 'block-toggle');
+      toggle.type = 'button';
+      toggle.setAttribute('aria-expanded', card.classList.contains('open') ? 'true' : 'false');
+
+      const number = makeEl('div', 'block-number', `BLOCK #${block?.index ?? '—'}`);
+      if (block?.index === 0) number.appendChild(makeEl('span', 'block-badge', 'GENESIS BLOCK'));
+      toggle.appendChild(number);
+
+      addField(toggle, 'hash', shortenHash(block?.hash), block?.hash);
+      addField(toggle, 'previous hash', shortenHash(block?.prev_hash), block?.prev_hash);
+      toggle.appendChild(makeEl('div', 'block-count', `${txs.length} tx / ${eventCount} event`));
+
+      const details = makeEl('div', 'block-details');
+      const detailGrid = makeEl('div', 'block-detail-grid');
+      addField(detailGrid, 'timestamp', formatVolyaTime(block?.timestamp));
+      addField(detailGrid, 'nonce', block?.nonce);
+      addField(detailGrid, 'difficulty', block?.difficulty);
+      addField(detailGrid, 'full hash', block?.hash);
+      detailGrid.lastElementChild.classList.add('wide');
+      addField(detailGrid, 'full previous hash', block?.prev_hash);
+      detailGrid.lastElementChild.classList.add('wide');
+      details.appendChild(detailGrid);
+
+      const txList = makeEl('div', 'tx-list');
+      if (txs.length) {
+        txs.forEach(tx => txList.appendChild(renderTransaction(tx, block?.index)));
+      } else {
+        txList.appendChild(makeEl('div', 'explorer-message', 'У цьому блоці немає transactions/events.'));
+      }
+      details.appendChild(txList);
+
+      toggle.addEventListener('click', () => {
+        const isOpen = card.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      card.appendChild(toggle);
+      card.appendChild(details);
+      explorerEls.list.appendChild(card);
+    });
+  }
+
+  function setBlockExplorerLoading(){
+    if (!explorerEls.list) return;
+    explorerEls.meta.textContent = 'LOADING CHAIN';
+    explorerEls.list.innerHTML = '';
+    explorerEls.list.appendChild(makeEl('div', 'explorer-message', 'Завантаження блоків VOLYA…'));
+  }
+
+  function setBlockExplorerOffline(){
+    if (!explorerEls.list) return;
+    explorerEls.meta.textContent = 'OFFLINE';
+    explorerEls.list.innerHTML = '';
+    explorerEls.list.appendChild(makeEl('div', 'explorer-message', 'Не вдалося отримати /chain. Дані Explorer тимчасово недоступні.'));
+  }
+
   function setExplorerOffline(){
     if (!testnetEls.status) return;
     testnetEls.status.textContent = 'OFFLINE';
@@ -1056,6 +1380,7 @@
     testnetEls.blocksTotal.textContent = '—';
     testnetEls.reflections.textContent = '—';
     testnetEls.pending.textContent = '—';
+    setBlockExplorerOffline();
   }
 
   function setExplorerOnline(chainData, mempoolData){
@@ -1077,10 +1402,12 @@
     testnetEls.blocksTotal.textContent = chainData?.length ?? chain.length;
     testnetEls.reflections.textContent = reflectionCount;
     testnetEls.pending.textContent = pendingReflections;
+    renderBlockExplorer(chainData);
   }
 
   async function updateVolyaExplorer(){
     if (!testnetEls.status) return;
+    setBlockExplorerLoading();
     try {
       const [healthRes, chainRes, mempoolRes] = await Promise.all([
         fetch(`${VOLYA_API_URL}/health`, { cache: 'no-store' }),
