@@ -1031,6 +1031,55 @@
   .network-explorer{ max-height: 760px; overflow: auto; }
   .network-explorer::-webkit-scrollbar{ width: 8px; }
   .network-explorer::-webkit-scrollbar-thumb{ background: rgba(92, 88, 190, 0.55); border-radius: 999px; }
+  .explorer-head{
+    width: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+  }
+  .explorer-head > span:first-child{
+    display: grid;
+    gap: 0.28rem;
+  }
+  .explorer-summary{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(64px, auto));
+    gap: 0.75rem;
+    align-items: end;
+    margin-left: auto;
+  }
+  .explorer-summary span{
+    display: grid;
+    gap: 0.16rem;
+    justify-items: end;
+  }
+  .explorer-summary b{
+    color: var(--paper);
+    font-family: var(--disp-mono);
+    font-size: 0.82rem;
+    line-height: 1;
+  }
+  .explorer-summary b.online{ color: #15f4aa; }
+  .explorer-summary b.offline{ color: #ff6b86; }
+  .explorer-summary b.unknown{ color: #8a8fa8; }
+  .explorer-summary small{
+    color: rgba(199, 215, 255, 0.58);
+    font-family: var(--disp-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .explorer-chevron{
+    color: #9ddcff;
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+  .network-explorer.collapsed .block-list{ display: none; }
+  .network-explorer:not(.collapsed) .explorer-chevron{ transform: rotate(180deg); }
   .block-card.cyber{ border-radius: 8px; overflow: hidden; }
   .block-card.cyber .block-toggle{ grid-template-columns: 108px 1fr auto; }
   .block-card.cyber .block-details{ border-top-color: rgba(80, 109, 255, 0.2); }
@@ -1399,11 +1448,19 @@
         <div class="network-nodes" id="network-nodes"></div>
       </div>
 
-      <aside class="network-panel network-explorer reveal" id="network-explorer" aria-labelledby="block-explorer-title">
-        <div class="panel-head">
-          <h3 class="panel-title" id="block-explorer-title">ОСТАННІ БЛОКИ</h3>
-          <span class="network-kicker" id="block-explorer-meta">LOADING CHAIN</span>
-        </div>
+      <aside class="network-panel network-explorer reveal collapsed" id="network-explorer" aria-labelledby="block-explorer-title">
+        <button class="panel-head explorer-head" id="block-explorer-toggle" type="button" aria-expanded="false" aria-controls="block-list">
+          <span>
+            <span class="panel-title" id="block-explorer-title">ОСТАННІ БЛОКИ</span>
+            <span class="network-kicker" id="block-explorer-meta">LOADING CHAIN</span>
+          </span>
+          <span class="explorer-summary" aria-label="VOLYA latest block summary">
+            <span><b id="explorer-latest-block">—</b><small>latest</small></span>
+            <span><b id="explorer-total-blocks">—</b><small>total</small></span>
+            <span><b id="explorer-live-status" class="offline">OFFLINE</b><small>status</small></span>
+          </span>
+          <span class="explorer-chevron" aria-hidden="true">⌄</span>
+        </button>
         <div class="block-list" id="block-list" aria-live="polite">
           <div class="explorer-message">Завантаження блоків VOLYA…</div>
         </div>
@@ -1696,10 +1753,19 @@
   };
   const explorerEls = {
     meta: document.getElementById('block-explorer-meta'),
-    list: document.getElementById('block-list')
+    list: document.getElementById('block-list'),
+    panel: document.getElementById('network-explorer'),
+    toggle: document.getElementById('block-explorer-toggle'),
+    latest: document.getElementById('explorer-latest-block'),
+    total: document.getElementById('explorer-total-blocks'),
+    status: document.getElementById('explorer-live-status')
   };
   let previousLatestHash = null;
   let lastNetworkSnapshot = [];
+  let lastSuccessfulResults = [];
+  let lastSuccessfulPrimary = null;
+  let lastRenderedChainLength = null;
+  let lastRenderedLatestHash = null;
 
   function bytesToHex(bytes){
     return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
@@ -1765,6 +1831,31 @@
   function getLatestBlock(chainData){
     const chain = Array.isArray(chainData?.chain) ? chainData.chain : [];
     return chain.at(-1);
+  }
+
+  function getChainIdentity(chainData){
+    const chain = Array.isArray(chainData?.chain) ? chainData.chain : [];
+    const latest = chain.at(-1);
+    return {
+      length: chain.length,
+      latestHash: latest?.hash || null
+    };
+  }
+
+  function shouldRenderBlockExplorer(chainData){
+    const identity = getChainIdentity(chainData);
+    if (!identity.length || !identity.latestHash) return false;
+    return (
+      lastRenderedChainLength === null ||
+      identity.length !== lastRenderedChainLength ||
+      identity.latestHash !== lastRenderedLatestHash
+    );
+  }
+
+  function rememberRenderedChain(chainData){
+    const identity = getChainIdentity(chainData);
+    lastRenderedChainLength = identity.length;
+    lastRenderedLatestHash = identity.latestHash;
   }
 
   function findBlockReward(chainData){
@@ -1973,30 +2064,50 @@
     });
   }
 
-  function renderNetworkSummary(results, primary){
-    const chainData = primary?.chainData;
-    const mempoolData = primary?.mempoolData;
+  function setExplorerStatus(isOnline){
+    if (!explorerEls.status) return;
+    explorerEls.status.textContent = isOnline ? 'ONLINE' : 'OFFLINE';
+    explorerEls.status.classList.toggle('online', isOnline);
+    explorerEls.status.classList.toggle('offline', !isOnline);
+    explorerEls.status.classList.toggle('unknown', false);
+  }
+
+  function updateExplorerSummary(chainData){
+    const chain = Array.isArray(chainData?.chain) ? chainData.chain : [];
+    const latest = chain.at(-1);
+    if (explorerEls.latest) explorerEls.latest.textContent = latest?.index ?? '—';
+    if (explorerEls.total) explorerEls.total.textContent = (chainData?.length ?? chain.length) || '—';
+  }
+
+  function renderNetworkSummary(results, primary, options = {}){
+    const chainData = primary?.chainData ?? lastSuccessfulPrimary?.chainData;
+    const mempoolData = primary?.mempoolData ?? lastSuccessfulPrimary?.mempoolData;
     const active = results.filter(node => node.online).length;
     const chain = Array.isArray(chainData?.chain) ? chainData.chain : [];
     const status = active ? 'LIVE' : 'OFFLINE';
+    const chainChanged = Boolean(options.chainChanged);
 
     networkEls.live.textContent = status;
     networkEls.summaryLive.textContent = status;
     networkEls.activityLive.textContent = status;
     setLiveStatusClass([networkEls.live, networkEls.summaryLive, networkEls.activityLive], Boolean(active));
+    setExplorerStatus(Boolean(active));
     networkEls.stability.textContent = active === results.length ? 'Стабільна' : active ? 'Часткова' : 'OFFLINE';
     networkEls.stability.classList.toggle('online', Boolean(active));
     networkEls.stability.classList.toggle('offline', !active);
     networkEls.stability.classList.toggle('unknown', false);
     networkEls.activeNodes.textContent = `${active} / ${results.length}`;
-    networkEls.blocksTotal.textContent = (chainData?.length ?? chain.length) || '—';
     networkEls.mempoolCount.textContent = mempoolData?.count ?? (Array.isArray(mempoolData?.transactions) ? mempoolData.transactions.length : '—');
+    renderNodeList(results);
+    renderNetworkNodes(results);
+
+    if (!chainChanged && lastRenderedChainLength !== null) return;
+
+    networkEls.blocksTotal.textContent = (chainData?.length ?? chain.length) || '—';
     networkEls.difficulty.textContent = chainData?.difficulty ?? getLatestBlock(chainData)?.difficulty ?? '—';
     networkEls.blockReward.textContent = findBlockReward(chainData);
     networkEls.chainWork.textContent = chainData?.chain_work ?? '—';
     networkEls.averageBlockTime.textContent = calculateAverageBlockTime(chain);
-    renderNodeList(results);
-    renderNetworkNodes(results);
     renderActivityChart(chain);
   }
 
@@ -2040,6 +2151,7 @@
     }
 
     explorerEls.meta.textContent = `${chainData?.length ?? chain.length} BLOCKS`;
+    updateExplorerSummary(chainData);
     [...chain].reverse().forEach((block, position) => {
       const txs = getTransactions(block);
       const eventCount = txs.filter(isReflectionEvent).length;
@@ -2089,18 +2201,19 @@
     });
   }
 
-  function setBlockExplorerLoading(){
-    if (!explorerEls.list) return;
-    explorerEls.meta.textContent = 'LOADING CHAIN';
-    explorerEls.list.innerHTML = '';
-    explorerEls.list.appendChild(makeEl('div', 'explorer-message', 'Завантаження блоків VOLYA…'));
-  }
-
   function setNetworkOffline(results){
     const safeResults = results?.length ? results : VOLYA_NODES.map(node => ({ ...node, online: false, latency: null }));
-    renderNetworkSummary(safeResults, safeResults[0]);
-    if (explorerEls.list) {
+    lastNetworkSnapshot = safeResults;
+
+    if (lastSuccessfulPrimary) {
+      renderNetworkSummary(safeResults, lastSuccessfulPrimary, { chainChanged: false });
+      return;
+    }
+
+    renderNetworkSummary(safeResults, safeResults[0], { chainChanged: true });
+    if (explorerEls.list && lastRenderedChainLength === null) {
       explorerEls.meta.textContent = 'OFFLINE';
+      setExplorerStatus(false);
       explorerEls.list.innerHTML = '';
       explorerEls.list.appendChild(makeEl('div', 'explorer-message', 'Не вдалося отримати /chain з жодного вузла.'));
     }
@@ -2109,16 +2222,23 @@
   function setNetworkOnline(results){
     const primary = getPrimaryNode(results);
     const latestHash = getLatestBlock(primary?.chainData)?.hash || null;
+    const chainChanged = shouldRenderBlockExplorer(primary?.chainData);
+
     if (previousLatestHash && latestHash && previousLatestHash !== latestHash) pulseNetworkLines();
     previousLatestHash = latestHash || previousLatestHash;
     lastNetworkSnapshot = results;
-    renderNetworkSummary(results, primary);
-    renderBlockExplorer(primary?.chainData);
+    lastSuccessfulResults = results;
+    lastSuccessfulPrimary = primary;
+
+    renderNetworkSummary(results, primary, { chainChanged });
+    if (chainChanged) {
+      renderBlockExplorer(primary?.chainData);
+      rememberRenderedChain(primary?.chainData);
+    }
   }
 
   async function updateVolyaExplorer(){
     if (!networkEls.stage) return;
-    setBlockExplorerLoading();
     const results = await Promise.all(VOLYA_NODES.map(fetchNodeState));
     if (results.some(node => node.online && node.chainData)) {
       setNetworkOnline(results);
@@ -2276,6 +2396,12 @@
       layer.innerHTML = '';
     }, 2400);
   });
+  if (explorerEls.toggle && explorerEls.panel) {
+    explorerEls.toggle.addEventListener('click', () => {
+      const collapsed = explorerEls.panel.classList.toggle('collapsed');
+      explorerEls.toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    });
+  }
   sizeNetworkCanvas();
   requestAnimationFrame(drawNetworkCanvas);
   updateVolyaExplorer();
@@ -2322,4 +2448,5 @@
 
 </body>
 </html>
+
 
